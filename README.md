@@ -1,3 +1,43 @@
+# SuperGlue with C++ API
+
+This repo is for **quick verification** of SuperPoint and SuperGlue in C++. It can be easily integrated into other C++ SfM and SLAM systems. One example is my tweaked ORB-SLAM3: https://github.com/ErcBunny/ORB-SLAM3.
+
+We do not deploy the model onto inference frameworks, but instead use PyTorch (no `TorchScript`) and create a [wrapper library](./include/SuperGlue.h) for on-GPU inference in C++. If you are looking for SuperGlue deployed using ONNX, here is a repo that might be helpful: https://github.com/xmba15/onnx_runtime_cpp.
+
+You can build the C++ library and demo in a `conda` environment.
+
+```shell
+conda create -n superglue
+conda activate superglue
+
+conda install pip eigen=3.3.7 opencv=4.6.0
+conda install -c conda-forge libstdcxx-ng
+pip3 install torch torchvision torchaudio matplotlib numpy opencv-python PyQt6 PySide6 PyQt5 PySide2 ipykernel
+
+mkdir build
+cd build
+cmake ..
+make
+# ./demo to run the example code
+# cd ../lib to find the shared library ready to be used in other projects
+```
+
+Library usage is simple and outputs can be directly visualized in OpenCV just like how ORB feature matches are visualized. See [`src/demo.cpp`](./src/demo.cpp) for details. There is also an [IPython notebook](./demo_superglue.ipynb) showing how the [Python wrapper](./models/SuperGlueWrapper.py) can be used.
+
+<p align="center">
+    <img src="assets/sp_sg.png">
+    SuperPoint + SuperGlue
+</p>
+
+<p align="center">
+    <img src="assets/orb_ham.png">
+    ORB + BruteForce-Hamming
+</p>
+
+---
+
+> ORIGINAL README BELOW
+
 <img src="assets/magicleap.png" width="240">
 
 ### Research @ Magic Leap (CVPR 2020, Oral)
