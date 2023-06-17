@@ -4,6 +4,8 @@ sys.path.append("../")
 from models.matching import Matching
 from models.utils import frame2tensor
 import cv2
+import numpy as np
+import torch
 
 
 class SuperGlueWrapper:
@@ -50,7 +52,7 @@ class SuperGlueWrapper:
         self.model.superglue.config['sinkhorn_iterations'] = sinkhorn_iterations
         self.model.superglue.config['match_threshold'] = match_threshold
     
-    def get_keypoints(self, img: cv2.Mat):
+    def get_init_keypoints(self, img: cv2.Mat):
         tensor = frame2tensor(img, self.device)
         self.last_keypoints = self.model.superpoint({'image': tensor})
         self.last_keypoints = {k+'0': self.last_keypoints[k] for k in self.keys}
@@ -77,3 +79,43 @@ class SuperGlueWrapper:
         self.last_keypoints = {k+'0': pred[k+'1'] for k in self.keys}
         self.last_keypoints['image0'] = tensor
         return kpts0, matches, confidence, kpts1
+
+    def get_keypoints(self, img: cv2.Mat):
+        x = frame2tensor(img, self.device)
+        y = self.model.superpoint({'image': x})
+        kpts = y["keypoints"][0].cpu().numpy()
+        scores = y["scores"][0].detach().cpu().numpy().reshape(1, -1)
+        des = y["descriptors"][0].detach().cpu().numpy()
+        frame_tensor = x.cpu().numpy()
+        return kpts, scores, des, frame_tensor
+
+    def match(
+            self,
+            kpts0: np.array, scores0: np.array, des0: np.array, im_tensor0: np.array,
+            kpts1: np.array, scores1: np.array, des1: np.array, im_tensor1: np.array
+        ):
+        keypoints0 = torch.from_numpy(kpts0).to(self.device)
+        scores0 = torch.from_numpy(scores0).to(self.device)
+        descriptors0 = torch.from_numpy(des0).to(self.device)
+        image0 = torch.from_numpy(im_tensor0).to(self.device)
+
+        keypoints1 = torch.from_numpy(kpts1).to(self.device)
+        scores1 = torch.from_numpy(scores1).to(self.device)
+        descriptors1 = torch.from_numpy(des1).to(self.device)
+        image1 = torch.from_numpy(im_tensor1).to(self.device)
+        
+        data = {
+            "keypoints0": keypoints0,
+            "scores0": scores0,
+            "descriptors0": descriptors0,
+            "image0": image0,
+            "keypoints1": keypoints1,
+            "scores1": scores1,
+            "descriptors1": descriptors1,
+            "image1": image1
+        }
+        pred = self.model(data)
+        matches = pred["matches0"][0].cpu().numpy()
+        confidence = pred["matching_scores0"][0].detach().cpu().numpy()
+        return kpts0, matches, confidence, kpts1
+    

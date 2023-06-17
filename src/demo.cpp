@@ -41,7 +41,7 @@ void imshow_superglue(Mat &img_1, Mat &img_2, Mat &img_3)
     imshow("img_superglue_full", img_match);
 
     // test forward_append, get keypoints of the first, then append new frames; reduce redundant keypoint computation
-    superglue.get_keypoints(img_1_gray);
+    superglue.get_init_keypoints(img_1_gray);
     superglue.forward_append(img_2_gray, keypoints_1, keypoints_2, matches, conf);
 
     Mat img_match_1;
@@ -52,6 +52,22 @@ void imshow_superglue(Mat &img_1, Mat &img_2, Mat &img_3)
     Mat img_match_2;
     drawMatches(img_2, keypoints_1, img_3, keypoints_2, matches, img_match_2);
     imshow("img_superglue_append_2", img_match_2);
+
+    // test first extract all info from images, then call match
+    std::vector<KeyPoint> keypoints1, keypoints2;
+    vector<float> scores1, scores2;
+    Mat descriptors1, frame_tensor1, descriptors2, frame_tensor2;
+    vector<DMatch> match;
+    vector<float> match_conf;
+    superglue.get_keypoints(img_1_gray, keypoints1, scores1, descriptors1, frame_tensor1);
+    superglue.get_keypoints(img_2_gray, keypoints2, scores2, descriptors2, frame_tensor2);
+    superglue.match_keypoints(
+        keypoints1, scores1, descriptors1, frame_tensor1,
+        keypoints2, scores2, descriptors2, frame_tensor2,
+        match, match_conf);
+    Mat img_match_3;
+    drawMatches(img_1, keypoints1, img_2, keypoints2, match, img_match_3);
+    imshow("img_superglue_separate", img_match_3);
 }
 
 /*
