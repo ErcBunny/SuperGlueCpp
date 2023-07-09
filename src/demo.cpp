@@ -24,7 +24,8 @@ void imshow_superglue(Mat &img_1, Mat &img_2, Mat &img_3)
         true,
         20,
         0.67,
-        true);
+        true,
+        "../models/");
 
     std::vector<KeyPoint> keypoints_1, keypoints_2;
     vector<DMatch> matches;

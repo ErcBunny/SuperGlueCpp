@@ -7,16 +7,21 @@
 #include <Python.h>
 #include <opencv2/core/core.hpp>
 #include <numpy/arrayobject.h>
+#include <iostream>
 
 SuperGlue::SuperGlue(int nms_radius, float keypoint_threshold, int max_keypoints, bool weights_indoor,
-                     int sinkhorn_iterations, float match_threshold, bool use_cuda)
+                     int sinkhorn_iterations, float match_threshold, bool use_cuda, const std::string& module_path)
 {
     Py_Initialize();
     _import_array();
 
     PyRun_SimpleString("import sys");
-    PyRun_SimpleString("sys.path.append('../models')");
+    PyRun_SimpleString(("sys.path.append('" + module_path + "')").c_str());
+    PyRun_SimpleString(("sys.path.append('" + module_path + "/../')").c_str());
     py_module_SuperGlueWrapper = PyImport_ImportModule("SuperGlueWrapper");
+    if(py_module_SuperGlueWrapper == NULL)
+        std::cout << "Import module FAILED, check module path" << std::endl;
+
     py_class_SuperGlueWrapper = PyObject_GetAttrString(py_module_SuperGlueWrapper, "SuperGlueWrapper");
 
     PyObject *py_args_init = PyTuple_New(7);
@@ -73,6 +78,7 @@ void SuperGlue::forward_full(cv::InputArray image_0, cv::InputArray image_1, std
     PyObject *ret = PyObject_CallObject(py_func_forward_full, py_args_forward_full);
 
     unpack_results(ret, keypoints_0, keypoints_1, matches, confidence);
+    Py_XDECREF(ret);
 }
 
 void SuperGlue::forward_append(cv::InputArray image, std::vector<cv::KeyPoint> &keypoints_0,
@@ -82,6 +88,7 @@ void SuperGlue::forward_append(cv::InputArray image, std::vector<cv::KeyPoint> &
     py_args_forward_append = Py_BuildValue("(O)", grayim_to_py_array(image));
     PyObject *ret = PyObject_CallObject(py_func_forward_append, py_args_forward_append);
     unpack_results(ret, keypoints_0, keypoints_1, matches, confidence);
+    Py_XDECREF(ret);
 }
 
 PyObject *SuperGlue::grayim_to_py_array(cv::InputArray image)
@@ -165,7 +172,6 @@ void SuperGlue::get_keypoints(cv::InputArray image, std::vector<cv::KeyPoint> &k
 
     npy_intp *kpts_shape = PyArray_SHAPE(kpts_array);
     npy_intp *des_shape = PyArray_SHAPE(des_array);
-    npy_intp *frametensor_shape = PyArray_SHAPE(frametensor_array);
 
     cv::Mat des((int)(kpts_shape[0]), (int)(des_shape[0]), CV_32F);
     cv::Mat ten(image.rows(), image.cols(), CV_32F);
@@ -178,7 +184,6 @@ void SuperGlue::get_keypoints(cv::InputArray image, std::vector<cv::KeyPoint> &k
             des.at<float>(i, j) = des_data[j * kpts_shape[0] + i];
         }
     }
-    int cnt = 0;
     for (int i = 0; i < image.rows(); i++)
     {
         for (int j = 0; j < image.cols(); j++)
@@ -188,6 +193,7 @@ void SuperGlue::get_keypoints(cv::InputArray image, std::vector<cv::KeyPoint> &k
     }
     descriptors = des;
     frame_tensor = ten;
+    Py_XDECREF(ret);
 }
 
 void SuperGlue::match_keypoints(std::vector<cv::KeyPoint> &keypoints0, std::vector<float> &keypoint_scores0,
@@ -249,6 +255,15 @@ void SuperGlue::match_keypoints(std::vector<cv::KeyPoint> &keypoints0, std::vect
 
     std::vector<cv::KeyPoint> _0, _1;
     unpack_results(ret, _0, _1, matches, confidence);
+    Py_XDECREF(array_kpts0);
+    Py_XDECREF(array_kpts1);
+    Py_XDECREF(array_scores0);
+    Py_XDECREF(array_scores1);
+    Py_XDECREF(array_des0);
+    Py_XDECREF(array_des1);
+    Py_XDECREF(array_tensor0);
+    Py_XDECREF(array_tensor1);
+    Py_XDECREF(ret);
 }
 
 SuperGlue::~SuperGlue()

@@ -1,6 +1,4 @@
 import sys
-
-sys.path.append("../")
 from models.matching import Matching
 from models.utils import frame2tensor
 import cv2

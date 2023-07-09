@@ -21,7 +21,8 @@ public:
         bool weights_indoor,
         int sinkhorn_iterations,
         float match_threshold,
-        bool use_cuda);
+        bool use_cuda,
+        const std::string &module_path);
 
     ~SuperGlue();
 
@@ -70,26 +71,26 @@ public:
 
 
 private:
-    PyObject *py_module_SuperGlueWrapper;
+    PyObject *py_module_SuperGlueWrapper{};
 
-    PyObject *py_class_SuperGlueWrapper;
-    PyObject *py_obj_SuperGlueWrapper;
+    PyObject *py_class_SuperGlueWrapper{};
+    PyObject *py_obj_SuperGlueWrapper{};
 
-    PyObject *py_func_set_config;
-    PyObject *py_func_get_init_keypoints;
-    PyObject *py_func_forward_full;
-    PyObject *py_func_forward_append;
-    PyObject *py_func_get_keypoints;
-    PyObject *py_func_match;
+    PyObject *py_func_set_config{};
+    PyObject *py_func_get_init_keypoints{};
+    PyObject *py_func_forward_full{};
+    PyObject *py_func_forward_append{};
+    PyObject *py_func_get_keypoints{};
+    PyObject *py_func_match{};
 
-    PyObject *py_args_set_config;
-    PyObject *py_args_get_init_keypoints;
-    PyObject *py_args_forward_full;
-    PyObject *py_args_forward_append;
-    PyObject *py_arg_get_keypoint;
-    PyObject *py_arg_match;
+    PyObject *py_args_set_config{};
+    PyObject *py_args_get_init_keypoints{};
+    PyObject *py_args_forward_full{};
+    PyObject *py_args_forward_append{};
+    PyObject *py_arg_get_keypoint{};
+    PyObject *py_arg_match{};
 
-    PyObject *grayim_to_py_array(cv::InputArray image);
+    static PyObject *grayim_to_py_array(cv::InputArray image);
 
     static void unpack_results(
         PyObject *ret,
