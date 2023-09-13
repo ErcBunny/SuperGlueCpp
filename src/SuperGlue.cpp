@@ -10,7 +10,10 @@
 #include <iostream>
 
 SuperGlue::SuperGlue(int nms_radius, float keypoint_threshold, int max_keypoints, bool weights_indoor,
-                     int sinkhorn_iterations, float match_threshold, bool use_cuda, const std::string& module_path)
+                     int sinkhorn_iterations, float match_threshold, bool use_cuda, const std::string& module_path):
+                     _nms_radius(nms_radius), _keypoint_threshold(keypoint_threshold), _max_keypoints(max_keypoints),
+                     _weights_indoor(weights_indoor), _sinkhorn_iterations(sinkhorn_iterations), _match_threshold(match_threshold),
+                     _use_cuda(use_cuda), _module_path(const_cast<std::string &>(module_path))
 {
     Py_Initialize();
     _import_array();
@@ -61,6 +64,21 @@ void SuperGlue::set_config(int nms_radius, float keypoint_threshold, int max_key
     PyTuple_SetItem(py_args_set_config, 3, Py_BuildValue("i", sinkhorn_iterations));
     PyTuple_SetItem(py_args_set_config, 4, Py_BuildValue("f", match_threshold));
     PyObject_CallObject(py_func_set_config, py_args_set_config);
+
+    _nms_radius = nms_radius;
+    _keypoint_threshold = keypoint_threshold;
+    _max_keypoints = max_keypoints;
+    _sinkhorn_iterations = sinkhorn_iterations;
+    _max_keypoints = match_threshold;
+}
+
+void SuperGlue::get_config(int &nms_radius, float &keypoint_threshold, int &max_keypoints, int &sinkhorn_iterations,
+                           float &match_threshold) {
+    nms_radius = _nms_radius;
+    keypoint_threshold = _keypoint_threshold;
+    max_keypoints = _max_keypoints;
+    sinkhorn_iterations = _sinkhorn_iterations;
+    match_threshold = _match_threshold;
 }
 
 void SuperGlue::get_init_keypoints(cv::InputArray image)

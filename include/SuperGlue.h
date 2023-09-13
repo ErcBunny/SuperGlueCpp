@@ -33,6 +33,13 @@ public:
         int sinkhorn_iterations,
         float match_threshold);
 
+    void get_config(
+        int &nms_radius,
+        float &keypoint_threshold,
+        int &max_keypoints,
+        int &sinkhorn_iterations,
+        float &match_threshold);
+
     void get_init_keypoints(cv::InputArray image);
 
     void forward_full(
@@ -71,6 +78,16 @@ public:
 
 
 private:
+
+    int _nms_radius;
+    float _keypoint_threshold;
+    int _max_keypoints;
+    bool _weights_indoor;
+    int _sinkhorn_iterations;
+    float _match_threshold;
+    bool _use_cuda;
+    std::string& _module_path;
+
     PyObject *py_module_SuperGlueWrapper{};
 
     PyObject *py_class_SuperGlueWrapper{};
