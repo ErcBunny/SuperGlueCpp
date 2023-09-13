@@ -59,13 +59,13 @@ void imshow_superglue(Mat &img_1, Mat &img_2, Mat &img_3)
     vector<float> scores1, scores2;
     Mat descriptors1, frame_tensor1, descriptors2, frame_tensor2;
     vector<DMatch> match;
-    vector<float> match_conf;
+    vector<float> match_dist;
     superglue.get_keypoints(img_1_gray, keypoints1, scores1, descriptors1, frame_tensor1);
     superglue.get_keypoints(img_2_gray, keypoints2, scores2, descriptors2, frame_tensor2);
     superglue.match_keypoints(
         keypoints1, scores1, descriptors1, frame_tensor1,
         keypoints2, scores2, descriptors2, frame_tensor2,
-        match, match_conf);
+        match, match_dist);
     Mat img_match_3;
     drawMatches(img_1, keypoints1, img_2, keypoints2, match, img_match_3);
     imshow("img_superglue_separate", img_match_3);
