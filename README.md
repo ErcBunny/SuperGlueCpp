@@ -1,6 +1,6 @@
 # SuperGlue with C++ API
 
-This repo is for **quick verification** of SuperPoint and SuperGlue in C++. It can be easily integrated into other C++ SfM and SLAM systems. One example is my tweaked ORB-SLAM3: https://github.com/ErcBunny/ORB-SLAM3.
+This repo is for **quick verification** of SuperPoint and SuperGlue in C++. It can be easily integrated into other C++ SfM and SLAM systems.
 
 We do not deploy the model onto inference frameworks, but instead use PyTorch (no `TorchScript`) and create a [wrapper library](./include/SuperGlue.h) for on-GPU inference in C++. If you are looking for SuperGlue deployed using ONNX, here is a repo that might be helpful: https://github.com/xmba15/onnx_runtime_cpp.
 
