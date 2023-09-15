@@ -24,7 +24,7 @@ void imshow_superglue(Mat &img_1, Mat &img_2, Mat &img_3)
         true,
         20,
         0.67,
-        true,
+        false, // toggle cuda here, set to false for max compatibility
         "../models/");
 
     std::vector<KeyPoint> keypoints_1, keypoints_2;
