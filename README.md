@@ -10,9 +10,8 @@ You can build the C++ library and demo in a `conda` environment.
 conda create -n superglue
 conda activate superglue
 
-conda install pip eigen=3.3.7 opencv=4.6.0
-conda install -c conda-forge libstdcxx-ng
-pip3 install torch torchvision torchaudio matplotlib numpy opencv-python PyQt6 PySide6 PyQt5 PySide2 ipykernel
+conda install pip opencv=4.6.0
+pip3 install torch torchvision torchaudio matplotlib numpy opencv-python==4.6.0.66 ipykernel
 
 mkdir build
 cd build
@@ -20,6 +19,7 @@ cmake ..
 make
 # ./demo to run the example code
 # cd ../lib to find the shared library ready to be used in other projects
+# feel free to try other versions of opencv
 ```
 
 Library usage is simple and outputs can be directly visualized in OpenCV just like how ORB feature matches are visualized. See [`src/demo.cpp`](./src/demo.cpp) for details. There is also an [IPython notebook](./demo_superglue.ipynb) showing how the [Python wrapper](./models/SuperGlueWrapper.py) can be used.
