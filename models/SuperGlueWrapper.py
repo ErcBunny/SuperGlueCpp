@@ -50,13 +50,13 @@ class SuperGlueWrapper:
         self.model.superglue.config['sinkhorn_iterations'] = sinkhorn_iterations
         self.model.superglue.config['match_threshold'] = match_threshold
     
-    def get_init_keypoints(self, img: cv2.Mat):
+    def get_init_keypoints(self, img):
         tensor = frame2tensor(img, self.device)
         self.last_keypoints = self.model.superpoint({'image': tensor})
         self.last_keypoints = {k+'0': self.last_keypoints[k] for k in self.keys}
         self.last_keypoints['image0'] = tensor
 
-    def forward_full(self, img_0: cv2.Mat, img_1: cv2.Mat):
+    def forward_full(self, img_0, img_1):
         tensor_0 = frame2tensor(img_0, self.device)
         tensor_1 = frame2tensor(img_1, self.device)
         pred = self.model({"image0": tensor_0, "image1": tensor_1})
@@ -66,7 +66,7 @@ class SuperGlueWrapper:
         kpts1 = pred["keypoints1"][0].cpu().numpy()
         return kpts0, matches, confidence, kpts1
         
-    def forward_append(self, img: cv2.Mat):
+    def forward_append(self, img):
         tensor = frame2tensor(img, self.device)
         pred = self.model({**self.last_keypoints, "image1": tensor})
         kpts0 = self.last_keypoints["keypoints0"][0].cpu().numpy()
@@ -78,7 +78,7 @@ class SuperGlueWrapper:
         self.last_keypoints['image0'] = tensor
         return kpts0, matches, confidence, kpts1
 
-    def get_keypoints(self, img: cv2.Mat):
+    def get_keypoints(self, img):
         x = frame2tensor(img, self.device)
         y = self.model.superpoint({'image': x})
         kpts = y["keypoints"][0].cpu().numpy()
