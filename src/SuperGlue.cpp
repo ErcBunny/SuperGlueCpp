@@ -225,13 +225,13 @@ void SuperGlue::match_keypoints(std::vector<cv::KeyPoint> &keypoints0, std::vect
     cv::transpose(descriptors0, des0);
     cv::transpose(descriptors1, des1);
 
-    for (int i = 0; i < keypoints0.size(); i++)
+    for (size_t i = 0; i < keypoints0.size(); i++)
     {
         kpts0.at<int>(i, 0) = (int)(keypoints0[i].pt.x);
         kpts0.at<int>(i, 1) = (int)(keypoints0[i].pt.y);
     }
 
-    for (int i = 0; i < keypoints1.size(); i++)
+    for (size_t i = 0; i < keypoints1.size(); i++)
     {
         kpts1.at<int>(i, 0) = (int)(keypoints1[i].pt.x);
         kpts1.at<int>(i, 1) = (int)(keypoints1[i].pt.y);
