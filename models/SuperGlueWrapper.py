@@ -31,6 +31,16 @@ class SuperGlueWrapper:
             },
         }
 
+        if not torch.cuda.is_available():
+            device = "cpu"
+        print("[Python-SuperGlueWrapper] nms_radius", nms_radius)
+        print("[Python-SuperGlueWrapper] kpt_thresh", keypoint_threshold)
+        print("[Python-SuperGlueWrapper] max_kpts_n", max_keypoints)
+        print("[Python-SuperGlueWrapper] weights", weights)
+        print("[Python-SuperGlueWrapper] sinkhorn", sinkhorn_iterations)
+        print("[Python-SuperGlueWrapper] match_thresh", match_threshold)
+        print("[Python-SuperGlueWrapper] device", device)
+
         self.keys = ['keypoints', 'scores', 'descriptors']
         self.device = device
         self.model = Matching(config).eval().to(device)
