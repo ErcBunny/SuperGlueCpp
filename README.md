@@ -11,7 +11,7 @@ conda create -n superglue
 conda activate superglue
 
 conda install pip opencv=4.6.0
-pip3 install torch torchvision torchaudio matplotlib numpy opencv-python==4.6.0.66 ipykernel
+pip3 install torch torchvision matplotlib numpy opencv-python==4.6.0.66 ipykernel
 
 mkdir build
 cd build
