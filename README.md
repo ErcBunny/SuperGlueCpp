@@ -1,17 +1,28 @@
 # SuperGlue with C++ API
 
-This repo is for **quick verification** of SuperPoint and SuperGlue in C++. It can be easily integrated into other C++ SfM and SLAM systems.
+This repo is for **quick verification** of SuperPoint and SuperGlue in C++. It can be easily integrated into other SfM and SLAM systems using on-GPU inference in C++.
 
-We do not deploy the model onto inference frameworks, but instead use PyTorch (no `TorchScript`) and create a [wrapper library](./include/SuperGlue.h) for on-GPU inference in C++. If you are looking for SuperGlue deployed using ONNX, here is a repo that might be helpful: https://github.com/xmba15/onnx_runtime_cpp.
+One option is to use the [wrapper library](./include/SuperGluePyWrap.h), which internally uses NumPy C++ interface for data exchange and tensor calculations are purely done in Python scripts. This is a less efficient and buggy way.
 
-You can build the C++ library and demo in a `conda` environment.
+**Alternatively, you can use the model exported using pyTorch C++ API, it is better implemented.**
+
+```sh
+# TODO
+```
+
+You can build the C++ library in a virtual environment. Using `mamba` is recommended.
 
 ```shell
-conda create -n superglue
-conda activate superglue
+mamba create -n superglue python=3.9 -y
+mamba activate superglue
 
-conda install pip opencv=4.6.0
-pip3 install torch torchvision matplotlib numpy opencv-python==4.6.0.66 ipykernel
+mamba install pytorch=2.0.1 torchvision pytorch-cuda=11.8 cuda-toolkit=11.8 cuda-nvcc=11.8 opencv=4.7 -c pytorch -c nvidia -y
+
+mamba install matplotlib numpy ipykernel -y
+
+wget https://download.pytorch.org/libtorch/cu118/libtorch-cxx11-abi-shared-with-deps-2.0.1%2Bcu118.zip
+unzip libtorch-cxx11-abi-shared-with-deps-2.0.1+cu118.zip
+# this will create dir libtorch under project root
 
 mkdir build
 cd build
@@ -22,7 +33,7 @@ make
 # feel free to try other versions of opencv
 ```
 
-Library usage is simple and outputs can be directly visualized in OpenCV just like how ORB feature matches are visualized. See [`src/demo.cpp`](./src/demo.cpp) for details. There is also an [IPython notebook](./demo_superglue.ipynb) showing how the [Python wrapper](./models/SuperGlueWrapper.py) can be used.
+Library usage is simple and outputs can be directly visualized in OpenCV just like how ORB feature matches are visualized. See [`src/demoPyWrap.cpp`](./src/demoPyWrap.cpp) for details. There is also an [IPython notebook](./demo_superglue.ipynb) showing how the [Python wrapper](./models/SuperGlueWrapper.py) can be used.
 
 <p align="center">
     <img src="assets/sp_sg.png">

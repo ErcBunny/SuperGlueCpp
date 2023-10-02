@@ -3,10 +3,11 @@
 #include <opencv2/features2d/features2d.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
-#include <SuperGlue.h>
+#include <SuperGluePyWrap.h>
 
 using namespace std;
 using namespace cv;
+using namespace sg_pywrap;
 
 void imshow_superglue(Mat &img_1, Mat &img_2, Mat &img_3)
 {
@@ -23,8 +24,8 @@ void imshow_superglue(Mat &img_1, Mat &img_2, Mat &img_3)
         -1,
         true,
         20,
-        0.67,
-        false, // toggle cuda here, set to false for max compatibility
+        0.5,
+        true, // if cuda not available, cpu will be use
         "../models/");
 
     std::vector<KeyPoint> keypoints_1, keypoints_2;
@@ -132,8 +133,8 @@ int main(int argc, char **argv)
     Mat img_2 = imread("../assets/freiburg_sequence/1341847989.802890.png", IMREAD_COLOR);
     Mat img_3 = imread("../assets/freiburg_sequence/1341847995.870641.png", IMREAD_COLOR);
 
-    imshow_superglue(img_1, img_2, img_3);
-    imshow_orb(img_1, img_2);
+   imshow_superglue(img_1, img_2, img_3);
+   imshow_orb(img_1, img_2);
 
     waitKey(0);
     return 0;
