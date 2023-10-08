@@ -2,13 +2,9 @@
 
 This repo is for **quick verification** of SuperPoint and SuperGlue in C++. It can be easily integrated into other SfM and SLAM systems using on-GPU inference in C++.
 
-One option is to use the [wrapper library](./include/SuperGluePyWrap.h), which internally uses NumPy C++ interface for data exchange and tensor calculations are purely done in Python scripts. This is a less efficient and buggy way.
+One option is to use the [wrapper library](./include/SuperGluePyWrap.h), which internally uses NumPy C++ interface for data exchange and tensor calculations are purely done in Python scripts. This is a less efficient way and GPU acceleration might be unavailable when the shared library is linked in other projects.
 
-**Alternatively, you can use the model exported using pyTorch C++ API, it is better implemented.**
-
-```sh
-# TODO
-```
+**Alternatively, you can use the model reimplemented using pyTorch C++ API.** Now the dependencies (e.g. libtorch) have been included in this repo, but the models in c++ are <u>still being worked on, and won't be out for probably a long time</u>.
 
 You can build the C++ library in a virtual environment. Using `mamba` is recommended.
 
@@ -16,10 +12,13 @@ You can build the C++ library in a virtual environment. Using `mamba` is recomme
 mamba create -n superglue python=3.9 -y
 mamba activate superglue
 
+# no need to install pytorch-cuda=11.8 cuda-toolkit=11.8 cuda-nvcc=11.8 if you don't intend to use libtorch.
+# also feel free to try other versions
 mamba install pytorch=2.0.1 torchvision pytorch-cuda=11.8 cuda-toolkit=11.8 cuda-nvcc=11.8 opencv=4.7 -c pytorch -c nvidia -y
 
 mamba install matplotlib numpy ipykernel -y
 
+# no need to download libtorch for pywrap usage
 wget https://download.pytorch.org/libtorch/cu118/libtorch-cxx11-abi-shared-with-deps-2.0.1%2Bcu118.zip
 unzip libtorch-cxx11-abi-shared-with-deps-2.0.1+cu118.zip
 # this will create dir libtorch under project root

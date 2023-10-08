@@ -5,7 +5,7 @@ project(supergluecpp)
 set(CMAKE_CXX_STANDARD 14)
 
 set(CMAKE_PREFIX_PATH $ENV{CONDA_PREFIX})
-list(APPEND CMAKE_PREFIX_PATH ${PROJECT_SOURCE_DIR}/libtorch)
+# list(APPEND CMAKE_PREFIX_PATH ${PROJECT_SOURCE_DIR}/libtorch)
 
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/lib)
 if(NOT CMAKE_BUILD_TYPE)
@@ -15,13 +15,13 @@ endif()
 # find packs
 find_package(Python3 REQUIRED COMPONENTS Interpreter Development NumPy)
 find_package(OpenCV REQUIRED)
-find_package(Torch REQUIRED)
+# find_package(Torch REQUIRED)
 
 # set include dirs
 include_directories(
     ${PROJECT_SOURCE_DIR}/include
     ${OpenCV_INCLUDE_DIRS}
-    ${PROJECT_SOURCE_DIR}/libtorch/include
+    # ${PROJECT_SOURCE_DIR}/libtorch/include
 )
 
 # superglue python wrapper ver shared lib
@@ -33,15 +33,15 @@ target_link_libraries(superglue_pywrap
 )
 
 # superglue torch C++ API ver shared lib
-add_library(superglue_libtorch SHARED src/SuperGlueLibtorch.cpp)
-target_link_libraries(superglue_libtorch
-    ${OpenCV_LIBS}
-    ${TORCH_LIBRARIES}
-)
+# add_library(superglue_libtorch SHARED src/SuperGlueLibtorch.cpp)
+# target_link_libraries(superglue_libtorch
+#     ${OpenCV_LIBS}
+#     ${TORCH_LIBRARIES}
+# )
 
 # demo applications
 add_executable(demo_pywrap src/demoPyWrap.cpp)
 target_link_libraries(demo_pywrap superglue_pywrap)
 
-add_executable(demo_libtorch src/demoLibtorch.cpp)
-target_link_libraries(demo_libtorch superglue_libtorch)
+# add_executable(demo_libtorch src/demoLibtorch.cpp)
+# target_link_libraries(demo_libtorch superglue_libtorch)
