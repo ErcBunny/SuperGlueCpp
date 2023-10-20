@@ -12,7 +12,7 @@ You can build the C++ library in a virtual environment. Using `mamba` is recomme
 mamba create -n superglue python=3.9 -y
 mamba activate superglue
 
-# no need to install pytorch-cuda=11.8 cuda-toolkit=11.8 cuda-nvcc=11.8 if you don't intend to use libtorch.
+# no need to install cuda-toolkit=11.8 cuda-nvcc=11.8 if you don't intend to use libtorch.
 # also feel free to try other versions
 mamba install pytorch=2.0.1 torchvision pytorch-cuda=11.8 cuda-toolkit=11.8 cuda-nvcc=11.8 opencv=4.7 -c pytorch -c nvidia -y
 
