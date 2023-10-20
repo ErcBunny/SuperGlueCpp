@@ -2,9 +2,9 @@
 
 This repo is for **quick verification** of SuperPoint and SuperGlue in C++. It can be easily integrated into other SfM and SLAM systems using on-GPU inference in C++.
 
-One option is to use the [wrapper library](./include/SuperGluePyWrap.h), which internally uses NumPy C++ interface for data exchange and tensor calculations are purely done in Python scripts. This is a less efficient way and GPU acceleration might be unavailable when the shared library is linked in other projects.
+One option is to use the [wrapper library](./include/SuperGluePyWrap.h), which internally uses NumPy C++ interface for data exchange and tensor calculations are purely done in Python scripts. This is a less efficient way and GPU acceleration might be unavailable when the shared library is linked in other projects (with ROS, documented in this [thread](https://github.com/introlab/rtabmap/issues/896#issuecomment-1712945734)).
 
-**Alternatively, you can use the model reimplemented using pyTorch C++ API.** Now the dependencies (e.g. libtorch) have been included in this repo, but the models in c++ are <u>still being worked on, and won't be out for probably a long time</u>.
+~~Alternatively, you can use the model reimplemented using pyTorch C++ API.~~ But his repo will never support this, as the best depolying method is perhaps with TensorRT, this [repo](https://github.com/yuefanhao/SuperPoint-SuperGlue-TensorRT) might be useful.
 
 You can build the C++ library in a virtual environment. Using `mamba` is recommended.
 
